@@ -35,7 +35,7 @@ OBJ_THRESHOLD = 0.55  # do tin cay toi thieu de ve khung vat the (imx500)
 PERSON_LABEL_NAME = 'person'  # ten nhan trong tap COCO ma model imx500 tra ve
 
 # Model YOLO rieng nhan dien trai pickleball (dat file .pt cung thu muc voi script nay)
-PICKLEBALL_MODEL_PATH = 'test_11_9.pt'
+PICKLEBALL_MODEL_PATH = 'pickleball_Yolo11n.pt'
 PICKLEBALL_THRESHOLD = 0.5  # do tin cay toi thieu de ve khung pickleball
 
 # Model nhan dien khuon mat (OpenCV YuNet, dnn module) - dat file .onnx cung thu muc voi script nay
@@ -70,7 +70,6 @@ PAGE = """\
     <h3>Camera</h3>
     <img src="stream.mjpg" width="640" height="480" />
     <div class="legend">
-      <span style="background:#00f;color:#fff;">Vat the (imx500)</span>
       <span style="background:#f00;color:#fff;">Nguoi (imx500)</span>
       <span style="background:#0f0;color:#000;">Khuon mat</span>
       <span style="background:#ff0;color:#000;">Pickleball (YOLO)</span>
@@ -322,6 +321,8 @@ def camera_worker():
                         x, y, w, h = int(x), int(y), int(w), int(h)
                         cls_idx = int(cls)
                         name = labels[cls_idx] if labels and cls_idx < len(labels) else f"class{cls_idx}"
+                        if name.strip().lower() != PERSON_LABEL_NAME:
+                            continue  # chi quan tam "nguoi", bo qua moi vat the khac
 
                         if name.strip().lower() == PERSON_LABEL_NAME:
                             # Khung rieng cho nguoi: mau do, day hon de de phan biet voi vat the khac
